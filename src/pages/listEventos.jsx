@@ -43,7 +43,7 @@ function ListEventos() {
   // Função para deletar evento
   async function deleteEvento(id) {
     try {
-      await api.deleteEvent(id);
+      await api.deleteEvento(id);
       await getEventos(); 
       showAlert("success", "Evento excluído com sucesso!");
     } catch (error) {
@@ -133,7 +133,7 @@ function ListEventos() {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            color="primary"
             style={{ marginTop: "15px" }}
             onClick={logout}
           >
