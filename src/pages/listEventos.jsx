@@ -1,51 +1,49 @@
 import { useState, useEffect } from "react";
-// Imports para criação de tabela
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-// TableHead é onde colocamos os títulos
 import TableHead from "@mui/material/TableHead";
-// TableBody é onde colocamos o conteúdo
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
-import api from "../axios/axios";
+import api from "../axios/axios"; 
 import { Button, IconButton, Alert, Snackbar } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function listEventos() {
+function ListEventos() {
   const [eventos, setEventos] = useState([]);
   const [alert, setAlert] = useState({
     open: false,
     severity: "",
     message: "",
   });
+  const navigate = useNavigate();
 
+  // Função para exibir alertas
   const showAlert = (severity, message) => {
     setAlert({ open: true, severity, message });
   };
 
+  // Função para fechar alertas
   const handleCloseAlert = () => {
     setAlert({ ...alert, open: false });
   };
 
-  const navigate = useNavigate();
-
   async function getEventos() {
     try {
       const response = await api.getEventos();
-      console.log(response.data.eventos);
-      setEventos(response.data.eventos);
+      setEventos(response.data.eventos); 
     } catch (error) {
-      console.log("Erro ", error);
+      console.error("Erro ao buscar eventos", error);
+      showAlert("error", "Erro ao buscar eventos");
     }
   }
 
+  // Função para deletar evento
   async function deleteEvento(id) {
     try {
-      await api.deleteEvento(id); 
+      await api.deleteEvent(id);
       await getEventos(); 
       showAlert("success", "Evento excluído com sucesso!");
     } catch (error) {
@@ -54,63 +52,91 @@ function listEventos() {
     }
   }
 
-  const listEventos = eventos.map((evento) => {
-    return (
-      <TableRow key={evento.id_organizador}>
-        <TableCell align="center">{evento.nome}</TableCell>
-        <TableCell align="center">{evento.descricao}</TableCell>
-        <TableCell align="center">{evento.data_hora}</TableCell>
-        <TableCell align="center">{evento.local}</TableCell>
-        <TableCell align="center">
-          <IconButton onClick={() => deleteEvento(evento.id)}>
-            <DeleteIcon color="error" />
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    );
-  });
-
+  // Função de logout
   function logout() {
     localStorage.removeItem("authenticated");
-    navigate("/");
+    navigate("/"); // Redireciona para a página de login
   }
 
+  // Mapeando os eventos para exibição na tabela
+  const listEventos = eventos.map((evento) => (
+    <TableRow key={evento.id_evento}>
+      <TableCell align="center">{evento.nome}</TableCell>
+      <TableCell align="center">{evento.descricao}</TableCell>
+      <TableCell align="center">{evento.data_hora}</TableCell>
+      <TableCell align="center">{evento.local}</TableCell>
+      <TableCell align="center">
+        <IconButton onClick={() => deleteEvento(evento.id_evento)}>
+          <DeleteIcon color="error" />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ));
+
+  // Hook para carregar os eventos na inicialização
   useEffect(() => {
     getEventos();
   }, []);
 
   return (
     <div>
+      {/* Exibe um alerta usando o Snackbar */}
       <Snackbar
         open={alert.open}
         autoHideDuration={3000}
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleCloseAlert}
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
           {alert.message}
         </Alert>
       </Snackbar>
 
+      {/* Condicionalmente exibe "Carregando..." ou a lista de eventos */}
       {eventos.length === 0 ? (
-        <p>Carregando eventos</p>
+        <h1>Carregando eventos...</h1>
       ) : (
         <div>
           <h5>Lista de Eventos</h5>
+
+          {/* Botão para redirecionar para a lista de usuários */}
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginBottom: "10px" }}
+            onClick={() => navigate("/users")} // Redireciona para a lista de usuários
+          >
+            Ir para Lista de Usuários
+          </Button>
+
+          {/* Tabela de Eventos */}
           <TableContainer component={Paper} style={{ margin: "2px" }}>
             <Table size="small">
-              <TableHead style={{ backgroundColor: "green", borderStyle: "solid" }}>
+              <TableHead style={{ backgroundColor: "brown", borderStyle: "solid" }}>
                 <TableRow>
                   <TableCell align="center">Nome</TableCell>
                   <TableCell align="center">Descrição</TableCell>
-                  <TableCell align="center">Data/Hora</TableCell>
+                  <TableCell align="center">Data e Hora</TableCell>
                   <TableCell align="center">Local</TableCell>
+                  <TableCell align="center">Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>{listEventos}</TableBody>
             </Table>
           </TableContainer>
-          <Button fullWidth variant="contained" onClick={logout}>
+
+          {/* Botão para logout */}
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            style={{ marginTop: "15px" }}
+            onClick={logout}
+          >
             SAIR
           </Button>
         </div>
@@ -119,4 +145,4 @@ function listEventos() {
   );
 }
 
-export default listEventos;
+export default ListEventos;
