@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // Imports para criação de tabela
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-// TableHead é onde colocamos os titulos
+// TableHead é onde colocamos os títulos
 import TableHead from "@mui/material/TableHead";
 // TableBody é onde colocamos o conteúdo
 import TableBody from "@mui/material/TableBody";
@@ -15,64 +15,54 @@ import { Button, IconButton, Alert, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 
-function listUsers() {
-  const [users, setUsers] = useState([]);
+function listEventos() {
+  const [eventos, setEventos] = useState([]);
   const [alert, setAlert] = useState({
-    // visibilidade (false: oculto; true: visível)
     open: false,
-    //nível de severidade (success, info, warning, error)
     severity: "",
-
-    //mensagem que será exibida
     message: "",
   });
 
-  // função para exibir o alerta
   const showAlert = (severity, message) => {
     setAlert({ open: true, severity, message });
   };
 
-  //fechar o alerta
   const handleCloseAlert = () => {
     setAlert({ ...alert, open: false });
   };
+
   const navigate = useNavigate();
 
-  async function getUsers() {
-    // Chamada da Api
-    await api.getUsers().then(
-      (response) => {
-        console.log(response.data.users);
-        setUsers(response.data.users);
-      },
-      (error) => {
-        console.log("Erro ", error);
-      }
-    );
-  }
-
-  async function deleteUser(id) {
-    // Chamada da Api
+  async function getEventos() {
     try {
-      await api.deleteUser(id);
-      await getUsers();
-      // mensagem informativa
-      showAlert("success", "Usuário deletado com sucesso!");
+      const response = await api.getEventos();
+      console.log(response.data.eventos);
+      setEventos(response.data.eventos);
     } catch (error) {
       console.log("Erro ", error);
-      showAlert("error", "Erro ao deletar usuário!"); // mensagem informativa de erro
-
     }
   }
 
-  const listUsers = users.map((user) => {
+  async function deleteEvento(id) {
+    try {
+      await api.deleteEvento(id); 
+      await getEventos(); 
+      showAlert("success", "Evento excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao deletar evento", error);
+      showAlert("error", error.response.data.error);
+    }
+  }
+
+  const listEventos = eventos.map((evento) => {
     return (
-      <TableRow key={user.id_usuario}>
-        <TableCell align="center">{user.name}</TableCell>
-        <TableCell align="center">{user.email}</TableCell>
-        <TableCell align="center">{user.cpf}</TableCell>
+      <TableRow key={evento.id_organizador}>
+        <TableCell align="center">{evento.nome}</TableCell>
+        <TableCell align="center">{evento.descricao}</TableCell>
+        <TableCell align="center">{evento.data_hora}</TableCell>
+        <TableCell align="center">{evento.local}</TableCell>
         <TableCell align="center">
-          <IconButton onClick={() => deleteUser(user.id)}>
+          <IconButton onClick={() => deleteEvento(evento.id)}>
             <DeleteIcon color="error" />
           </IconButton>
         </TableCell>
@@ -86,10 +76,7 @@ function listUsers() {
   }
 
   useEffect(() => {
-    // if(!localStorage.getItem("authenticated")){
-    //   navigate("/");
-    // }
-    getUsers();
+    getEventos();
   }, []);
 
   return (
@@ -105,38 +92,31 @@ function listUsers() {
         </Alert>
       </Snackbar>
 
-      {users.length === 0 ? (
-        <p>Carregando usuários</p>
+      {eventos.length === 0 ? (
+        <p>Carregando eventos</p>
       ) : (
         <div>
-          <h5>Lista de usuários</h5>
+          <h5>Lista de Eventos</h5>
           <TableContainer component={Paper} style={{ margin: "2px" }}>
             <Table size="small">
-              <TableHead
-                style={{ backgroundColor: "green", borderStyle: "solid" }}
-              >
+              <TableHead style={{ backgroundColor: "green", borderStyle: "solid" }}>
                 <TableRow>
                   <TableCell align="center">Nome</TableCell>
-                  <TableCell align="center">Email</TableCell>
-                  <TableCell align="center">CPF</TableCell>
-                  <TableCell align="center">Ações</TableCell>
+                  <TableCell align="center">Descrição</TableCell>
+                  <TableCell align="center">Data/Hora</TableCell>
+                  <TableCell align="center">Local</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>{listUsers}</TableBody>
+              <TableBody>{listEventos}</TableBody>
             </Table>
           </TableContainer>
           <Button fullWidth variant="contained" onClick={logout}>
             SAIR
           </Button>
-          <Button variant="outlined" component={Link} to="/eventos">
-            EVENTOS
-          </Button>
-
-          
         </div>
       )}
-      
     </div>
   );
 }
-export default listUsers;
+
+export default listEventos;
