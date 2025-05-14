@@ -10,8 +10,7 @@ import api from "../axios/axios";
 import { Button, IconButton, Alert, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import ConfirmDelete from "../components/ConfirmDelete"
-
+import ConfirmDelete from "../components/ConfirmDelete";
 
 function listUsers() {
   const [users, setUsers] = useState([]);
@@ -22,7 +21,7 @@ function listUsers() {
   });
   const navigate = useNavigate();
 
-  const [usertoDelete, setUserToDelete] = useState("");
+  const [userToDelete, setUserToDelete] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
   const showAlert = (severity, message) => {
@@ -34,9 +33,9 @@ function listUsers() {
   };
 
   const openDeleteModal = (id, name) => {
-    setUserToDelete({id: id, name: name });
+    setUserToDelete({ id: id, name: name });
     setModalOpen(true);
-  }
+  };
 
   async function getUsers() {
     try {
@@ -50,16 +49,16 @@ function listUsers() {
 
   async function deleteUser() {
     try {
-      await api.deleteUser(usertoDelete.id);
+      await api.deleteUser(userToDelete.id);
       await getUsers();
       showAlert("success", "Usuário excluído com sucesso!");
       setModalOpen(false);
     } catch (error) {
-        console.error("Erro ao deletar usuário", error);
-        showAlert("error", error.response.data.error);
-        setModalOpen(false);
-      }
+      console.error("Erro ao deletar usuário", error);
+      showAlert("error", error.response.data.error);
+      setModalOpen(false);
     }
+  }
 
   function logout() {
     localStorage.removeItem("authenticated");
@@ -105,10 +104,9 @@ function listUsers() {
       </Snackbar>
       <ConfirmDelete
         open={modalOpen}
-        userName={usertoDelete.name}
+        userName={userToDelete.name} // Passa o nome do usuário para o modal
         onConfirm={deleteUser}
         onClose={() => setModalOpen(false)}
-        
       />
 
       {users.length === 0 ? (
@@ -130,7 +128,7 @@ function listUsers() {
           <TableContainer component={Paper} style={{ margin: "2px" }}>
             <Table size="small">
               <TableHead
-                style={{ backgroundColor: "brown", borderStyle: "solid" }}
+                style={{ backgroundColor: "white", borderStyle: "solid" }}
               >
                 <TableRow>
                   <TableCell align="center">Nome</TableCell>
@@ -146,7 +144,7 @@ function listUsers() {
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            color="primary"
             style={{ marginTop: "15px" }}
             onClick={logout}
           >

@@ -116,7 +116,7 @@ function ListEventos() {
           {/* Tabela de Eventos */}
           <TableContainer component={Paper} style={{ margin: "2px" }}>
             <Table size="small">
-              <TableHead style={{ backgroundColor: "brown", borderStyle: "solid" }}>
+              <TableHead style={{ backgroundColor: "white", borderStyle: "solid" }}>
                 <TableRow>
                   <TableCell align="center">Nome</TableCell>
                   <TableCell align="center">Descrição</TableCell>

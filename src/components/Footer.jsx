@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 
 const Footer = () =>{
     return(
-        <Box component="footer" sx={{backgroundColor:"green", width:"100%", height:"30px",
+        <Box component="footer" sx={{backgroundColor:"black", width:"100%", height:"30px",
     position:"fixed", bottom:0,}}
         
         />

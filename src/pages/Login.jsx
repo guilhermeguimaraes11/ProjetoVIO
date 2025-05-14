@@ -31,7 +31,8 @@ function Login() {
     await api.postLogin(user).then(
       (response)=>{
         alert(response.data.message)
-        localStorage.setItem('authenticated', true) // verifica se usuario ja esta no sistema
+        localStorage.setItem('authenticated', true)// verifica se usuario ja esta no sistema
+        localStorage.setItem("token", response.data.token) 
         navigate("users/")
       },
     (error)=>{
@@ -54,7 +55,7 @@ function Login() {
         <Avatar
           sx={{
             margin: 1,
-            backgroundColor: "green",
+            backgroundColor: "black",
           }}
         >
           <LockOutlinedIcon />
@@ -98,7 +99,7 @@ function Login() {
             sx={{
               mt: 3,
               mb: 2,
-              backgroundColor: "green",
+              backgroundColor: "black",
             }}
           >
             Entrar
@@ -109,7 +110,7 @@ function Login() {
             sx={{
               mt: 3,
               mb: 2,
-              backgroundColor: "green",
+              backgroundColor: "black",
             }}>
             <Link to="/cadastro">Cadastro</Link>
           </Button>
