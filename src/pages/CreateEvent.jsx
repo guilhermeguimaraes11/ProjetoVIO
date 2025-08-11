@@ -24,7 +24,7 @@ function CreateEvent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await sheets.createEvent(form, imagem);
+      await sheets.createEvento(form, imagem);
       alert("Evento criado com sucesso!");
     } catch (err) {
       console.error(err);

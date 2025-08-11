@@ -5,6 +5,8 @@ import Cadastro from "./pages/Cadastro";
 import ListEventos from "./pages/listEventos";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateEvent from "./pages/CreateEvent";
+import { List } from "@mui/material";
+import { Create } from "@mui/icons-material";
 
 
 function App() {
@@ -12,7 +14,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<CreateEvent />} />
           <Route path="/CreateEvent" element={<CreateEvent />} />
           <Route
             path="/users"
