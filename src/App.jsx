@@ -14,7 +14,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<CreateEvent />} />
+          <Route path="/" element={<Login />} />
           <Route path="/CreateEvent" element={<CreateEvent />} />
           <Route
             path="/users"
