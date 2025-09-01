@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreateEvent from "./pages/CreateEvent";
 import { List } from "@mui/material";
 import { Create } from "@mui/icons-material";
+import Dashboard from "./pages/Dashboards";
 
 
 function App() {
@@ -37,6 +38,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreateEvent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
               </ProtectedRoute>
             }
           />
